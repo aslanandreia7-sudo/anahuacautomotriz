@@ -21,8 +21,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize', # Para el filtro |intcomma que usas en el home
-    # Agrega aquí tus apps (ejemplo: 'catalogo', 'inventario')
+    'django.contrib.humanize',
+    
+    # --- AGREGA TU APP AQUÍ ---
+    'cars', 
+    # --------------------------
+
+    'tailwind',
+    'crispy_forms',
+    'crispy_tailwind',
 ]
 
 MIDDLEWARE = [
