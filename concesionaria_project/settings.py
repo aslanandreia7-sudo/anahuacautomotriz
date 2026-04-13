@@ -36,7 +36,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'autosanett.urls' # Asegúrate que este sea el nombre de tu carpeta principal
+ROOT_URLCONF = 'concesionaria_project.urls' # Asegúrate que este sea el nombre de tu carpeta principal
 
 TEMPLATES = [
     {
@@ -54,7 +54,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Anett_SA.wsgi.application'
+WSGI_APPLICATION = 'concesionaria_project.wsgi.application'
 
 # BASE DE DATOS: Configurada para usar SQLite en Render
 DATABASES = {
