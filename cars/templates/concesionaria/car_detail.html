@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="max-w-7xl mx-auto px-4 py-12">
+  <h1 class="text-3xl font-bold mb-4">{{ car.title }}</h1>
+
+  {% if car.main_image %}
+    <img src="{{ car.main_image.url }}" class="w-full max-w-3xl rounded-xl mb-6">
+  {% endif %}
+
+  <p class="text-2xl font-bold mb-4">${{ car.price }}</p>
+  <p class="mb-2">Año: {{ car.year }}</p>
+  <p class="mb-2">Color: {{ car.color }}</p>
+  <p class="mb-2">Motor: {{ car.engine }}</p>
+  <p class="mb-2">Combustible: {{ car.fuel_type }}</p>
+  <p class="mb-2">Transmisión: {{ car.transmission }}</p>
+  <p class="mt-6">{{ car.description }}</p>
+</section>
+{% endblock %}
