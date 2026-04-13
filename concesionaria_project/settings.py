@@ -54,7 +54,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'autosanett.wsgi.application'
+WSGI_APPLICATION = 'Anett_SA.wsgi.application'
 
 # BASE DE DATOS: Configurada para usar SQLite en Render
 DATABASES = {
