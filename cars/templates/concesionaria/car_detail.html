@@ -5,15 +5,39 @@
   <h1 class="text-3xl font-bold mb-4">{{ car.title }}</h1>
 
   {% if car.main_image %}
-    <img src="{{ car.main_image.url }}" class="w-full max-w-3xl rounded-xl mb-6">
+    <img src="{{ car.main_image.url }}" alt="{{ car.title }}" class="w-full max-w-3xl rounded-xl mb-6">
   {% endif %}
 
-  <p class="text-2xl font-bold mb-4">${{ car.price }}</p>
-  <p class="mb-2">Año: {{ car.year }}</p>
-  <p class="mb-2">Color: {{ car.color }}</p>
-  <p class="mb-2">Motor: {{ car.engine }}</p>
-  <p class="mb-2">Combustible: {{ car.fuel_type }}</p>
-  <p class="mb-2">Transmisión: {{ car.transmission }}</p>
-  <p class="mt-6">{{ car.description }}</p>
+  <p class="text-2xl font-bold mb-4">
+    {% if car.price %}
+      ${{ car.price }}
+    {% else %}
+      Precio no disponible
+    {% endif %}
+  </p>
+
+  {% if car.year %}
+    <p class="mb-2">Año: {{ car.year }}</p>
+  {% endif %}
+
+  {% if car.color %}
+    <p class="mb-2">Color: {{ car.color }}</p>
+  {% endif %}
+
+  {% if car.engine %}
+    <p class="mb-2">Motor: {{ car.engine }}</p>
+  {% endif %}
+
+  {% if car.fuel_type %}
+    <p class="mb-2">Combustible: {{ car.fuel_type }}</p>
+  {% endif %}
+
+  {% if car.transmission %}
+    <p class="mb-2">Transmisión: {{ car.transmission }}</p>
+  {% endif %}
+
+  {% if car.description %}
+    <p class="mt-6">{{ car.description }}</p>
+  {% endif %}
 </section>
 {% endblock %}

@@ -1,10 +1,30 @@
-<nav class="bg-black/70 backdrop-blur sticky top-0 z-50 border-b border-zinc-800">
-  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-    <a href="/" class="font-bold text-xl">{{ settings.site_name|default:"Concesionaria Premium" }}</a>
-    <div class="space-x-4">
-      <a href="/" class="hover:text-red-500">Inicio</a>
-      <a href="/catalogo/" class="hover:text-red-500">Catálogo</a>
-      <a href="/contacto/" class="hover:text-red-500">Contáctanos</a>
+<nav style="background:#0E2470; border-bottom:3px solid #C8102E; box-shadow:0 4px 20px rgba(14,36,112,0.4);">
+  <div class="max-w-7xl mx-auto px-6 flex justify-between items-center h-16">
+
+    <!-- Logo -->
+    <a href="/" class="flex flex-col leading-none no-underline">
+      <span style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:26px; color:#fff; letter-spacing:0.06em; text-transform:uppercase;">
+        Anáhuac
+      </span>
+      <span style="background:#C8102E; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; padding:2px 7px; border-radius:2px; align-self:flex-start; margin-top:3px;">
+        Automotriz
+      </span>
+    </a>
+
+    <!-- Links -->
+    <div class="hidden md:flex items-center gap-1">
+      <a href="/" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Inicio</a>
+      <a href="/catalogo/" class="nav-link {% if 'catalogo' in request.path %}active{% endif %}">Catálogo</a>
+      <a href="/nosotros/" class="nav-link {% if 'nosotros' in request.path %}active{% endif %}">Nosotros</a>
+      <a href="/contacto/" class="nav-link nav-cta">Contáctanos</a>
     </div>
+
+    <!-- Mobile hamburger (Alpine.js) -->
+    <button class="md:hidden flex flex-col gap-1.5 p-2" @click="mobileOpen = !mobileOpen" x-data="{ mobileOpen: false }">
+      <span class="block w-6 h-0.5 bg-white rounded"></span>
+      <span class="block w-6 h-0.5 bg-white rounded"></span>
+      <span class="block w-6 h-0.5 bg-white rounded"></span>
+    </button>
+
   </div>
 </nav>

@@ -11,7 +11,7 @@ SECRET_KEY = '3p$**wodvg=2)i=$do7tn7ftq6@t1w)d_(wya-%u$nwo&&7259'
 DEBUG = True 
 
 # IMPORTANTE: Permitir el dominio de Render
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [

@@ -1,81 +1,177 @@
 {% extends "base.html" %}
-{% load humanize %} {% block title %}Inventario Exclusivo | {{ settings.site_name }}{% endblock %}
+{% load humanize %}
+
+{% block title %}Inventario | {{ settings.site_name|default:"Anáhuac Automotriz" }}{% endblock %}
 
 {% block content %}
-<section class="max-w-7xl mx-auto px-6 py-16">
-    <div class="mb-12">
-        <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">Nuestro Inventario</h1>
-        <p class="text-zinc-400 text-lg">Explora nuestra selección de vehículos certificados y listos para entrega inmediata.</p>
-        <div class="h-1 w-20 bg-gold mt-4"></div>
+
+<div style="background:linear-gradient(135deg,#0E2470 0%,#1A3A9B 100%); border-bottom:3px solid #C8102E; padding:40px 32px; position:relative; overflow:hidden;">
+    <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 38px,rgba(255,255,255,0.02) 38px,rgba(255,255,255,0.02) 40px),repeating-linear-gradient(90deg,transparent,transparent 38px,rgba(255,255,255,0.02) 38px,rgba(255,255,255,0.02) 40px);"></div>
+
+    <div class="max-w-7xl mx-auto" style="position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;">
+        <div>
+            <p style="font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:12px;">
+                <a href="/" style="color:rgba(255,255,255,0.4);text-decoration:none;">Inicio</a> ›
+                <span style="color:#C8102E;">Inventario</span>
+            </p>
+            <h1 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:46px;color:#fff;text-transform:uppercase;letter-spacing:0.02em;line-height:1;margin-bottom:8px;">
+                Nuestro <span style="color:#C8102E;">Inventario</span>
+            </h1>
+            <p style="font-size:14px;color:rgba(255,255,255,0.5);max-width:460px;line-height:1.6;">
+                Explora nuestra selección de vehículos certificados y listos para entrega inmediata en Mexicali.
+            </p>
+            <div style="width:48px;height:4px;background:#C8102E;border-radius:2px;margin-top:14px;"></div>
+        </div>
+
+        <form method="GET" style="display:flex;gap:0;flex-wrap:wrap;">
+            <input type="text" name="q" value="{{ q }}" placeholder="Buscar vehículo..."
+                   style="padding:11px 16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-right:none;border-radius:4px 0 0 4px;color:#fff;font-family:'Barlow',sans-serif;font-size:13px;outline:none;width:240px;">
+            <input type="hidden" name="orden" value="{{ orden|default:'reciente' }}">
+            <button type="submit"
+                    style="background:#C8102E;color:#fff;border:none;padding:0 16px;border-radius:0 4px 4px 0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">
+                Buscar
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-6 py-8">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+        <p style="font-size:13px;color:#8A9ABF;">
+            <strong style="color:#111827;">{{ page_obj.paginator.count }} vehículo{{ page_obj.paginator.count|pluralize }}</strong>
+            {% if q %} para “{{ q }}”{% endif %}
+        </p>
+
+        <form method="GET">
+            <input type="hidden" name="q" value="{{ q }}">
+            <select name="orden" onchange="this.form.submit()"
+                    style="padding:7px 12px;border:1px solid rgba(26,58,155,0.15);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;color:#0E2470;background:#fff;outline:none;cursor:pointer;">
+                <option value="reciente" {% if orden == 'reciente' or not orden %}selected{% endif %}>Más recientes</option>
+                <option value="precio_asc" {% if orden == 'precio_asc' %}selected{% endif %}>Precio: menor a mayor</option>
+                <option value="precio_desc" {% if orden == 'precio_desc' %}selected{% endif %}>Precio: mayor a menor</option>
+                <option value="anio_desc" {% if orden == 'anio_desc' %}selected{% endif %}>Año: más nuevo</option>
+            </select>
+        </form>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {% for car in page_obj %}
-            <div class="group bg-surface rounded-3xl overflow-hidden border border-white/5 hover:border-gold/30 transition-all duration-500">
-                <div class="relative h-64 overflow-hidden bg-zinc-800">
-                    {% if car.main_image %}
-                        <img src="{{ car.main_image.url }}" alt="{{ car.title }}" 
-                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    {% else %}
-                        <div class="w-full h-full flex items-center justify-center">
-                            <span class="text-zinc-600 italic">Imagen en preparación</span>
-                        </div>
-                    {% endif %}
-                    
-                    <div class="absolute bottom-4 left-4">
-                        <span class="px-3 py-1 bg-dark/80 backdrop-blur-md text-xs font-bold rounded-full border border-white/10">
-                            {{ car.year|default:"Modelo 2026" }}
-                        </span>
-                    </div>
-                </div>
+        <article style="background:#fff;border-radius:8px;overflow:hidden;border:1px solid rgba(26,58,155,0.08);box-shadow:0 2px 10px rgba(14,36,112,0.06);display:flex;flex-direction:column;height:100%;transition:all .22s;"
+                 onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 28px rgba(14,36,112,0.13)'"
+                 onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 10px rgba(14,36,112,0.06)'">
 
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-gold transition-colors">
+            <a href="{% url 'car_detail' car.slug %}" style="text-decoration:none;color:inherit;display:block;">
+                <div style="height:220px;background:#EDF1FB;border-bottom:3px solid #1A3A9B;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                    {% if car.main_image %}
+                        <img src="{{ car.main_image.url }}" alt="{{ car.title }}"
+                             style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s;"
+                             onmouseover="this.style.transform='scale(1.05)'"
+                             onmouseout="this.style.transform='scale(1)'">
+                    {% else %}
+                        <span style="color:#8A9ABF;font-size:12px;font-style:italic;">Imagen en preparación</span>
+                    {% endif %}
+
+                    <span style="position:absolute;bottom:8px;left:8px;background:rgba(14,36,112,0.82);color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;">
+                        {{ car.year|default:"2026" }}
+                    </span>
+
+                    {% if car.is_featured %}
+                    <span style="position:absolute;top:8px;right:8px;background:#C8102E;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;">
+                        Destacado
+                    </span>
+                    {% endif %}
+                </div>
+            </a>
+
+            <div style="padding:16px;display:flex;flex-direction:column;flex:1;">
+                <a href="{% url 'car_detail' car.slug %}" style="text-decoration:none;color:inherit;">
+                    <h3 style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;text-transform:uppercase;color:#111827;letter-spacing:0.02em;margin:0 0 4px 0;line-height:1.1;">
                         {{ car.title|default:"Vehículo en catálogo" }}
                     </h3>
-                    
-                    <p class="text-2xl font-light text-white mb-6">
-                        {% if car.price and car.price > 0 %}
-                            <span class="text-gold font-semibold">$</span>{{ car.price|intcomma }}
-                        {% else %}
-                            <span class="text-zinc-500 text-lg italic">Consultar precio</span>
-                        {% endif %}
-                    </p>
+                </a>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <a href="{% url 'car_detail' car.slug %}" 
-                           class="flex items-center justify-center py-3 bg-white/5 border border-white/10 rounded-xl font-semibold hover:bg-white hover:text-dark transition-all">
-                            Detalles
-                        </a>
-                        <a href="https://wa.me/TUNUMERO" 
-                           class="flex items-center justify-center py-3 bg-gold/10 border border-gold/20 text-gold rounded-xl font-semibold hover:bg-gold hover:text-dark transition-all">
-                            Cotizar
-                        </a>
-                    </div>
+                {% if car.body_type or car.transmission %}
+                <div style="font-size:12px;color:#8A9ABF;margin-bottom:10px;min-height:18px;">
+                    {{ car.body_type }}{% if car.body_type and car.transmission %} · {% endif %}{{ car.transmission }}
+                </div>
+                {% else %}
+                <div style="min-height:18px;margin-bottom:10px;"></div>
+                {% endif %}
+
+                <div style="margin-bottom:16px;">
+                    {% if car.price and car.price > 0 %}
+                        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;line-height:1.1;color:#C8102E;">
+                            ${{ car.price|intcomma }} <span style="font-family:'Barlow',sans-serif;font-weight:500;font-size:12px;color:#8A9ABF;">MXN</span>
+                        </div>
+                    {% else %}
+                        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;line-height:1.1;color:#8A9ABF;letter-spacing:0.08em;">
+                            CONSULTAR PRECIO
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div style="margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <a href="{% url 'car_detail' car.slug %}"
+                       style="background:#1A3A9B;color:#fff;padding:10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;min-height:42px;">
+                        Detalles
+                    </a>
+
+                    <a href="https://wa.me/52{{ settings.whatsapp|default:'6861137393' }}?text=Hola, me interesa el {{ car.title|urlencode }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       style="background:rgba(37,211,102,0.1);color:#1a8a3f;border:1px solid rgba(37,211,102,0.3);padding:10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;min-height:42px;">
+                        💬 Cotizar
+                    </a>
                 </div>
             </div>
+        </article>
         {% empty %}
-            <div class="col-span-full py-24 text-center border-2 border-dashed border-white/5 rounded-3xl">
-                <svg class="mx-auto h-12 w-12 text-zinc-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <h3 class="text-xl font-medium text-zinc-300">No encontramos vehículos</h3>
-                <p class="text-zinc-500 mt-2">Estamos actualizando nuestro inventario. Vuelve pronto o contáctanos directamente.</p>
-                <a href="/" class="inline-block mt-6 text-gold hover:underline underline-offset-4">Volver al inicio</a>
-            </div>
+        <div style="grid-column:1/-1;text-align:center;padding:64px 32px;background:#fff;border-radius:6px;border:2px dashed rgba(26,58,155,0.12);">
+            <div style="font-size:48px;margin-bottom:16px;opacity:.35;">🚗</div>
+            <h3 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;text-transform:uppercase;color:#0E2470;margin-bottom:8px;">
+                No encontramos vehículos
+            </h3>
+            <p style="font-size:14px;color:#8A9ABF;margin-bottom:20px;">
+                {% if q %}
+                    No hay resultados para tu búsqueda. Intenta con otra palabra.
+                {% else %}
+                    Estamos actualizando nuestro inventario. Vuelve pronto o contáctanos directamente.
+                {% endif %}
+            </p>
+            <a href="{% url 'inventory' %}" style="display:inline-block;background:#C8102E;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;padding:10px 24px;border-radius:4px;text-decoration:none;">
+                Ver todo
+            </a>
+        </div>
         {% endfor %}
     </div>
 
     {% if page_obj.has_other_pages %}
-    <div class="mt-16 flex justify-center gap-2">
+    <div style="display:flex;justify-content:center;gap:6px;margin-top:28px;align-items:center;flex-wrap:wrap;">
         {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="p-3 bg-surface border border-white/5 rounded-lg hover:bg-white/10">Anterior</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}"
+           style="width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-decoration:none;border:1px solid rgba(26,58,155,0.15);background:#fff;color:#1A3A9B;">←</a>
         {% endif %}
-        <span class="p-3 bg-gold text-dark font-bold rounded-lg px-6">{{ page_obj.number }}</span>
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <a href="?page={{ num }}{% if q %}&q={{ q|urlencode }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}"
+           style="width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-decoration:none;background:#C8102E;color:#fff;border:1px solid #C8102E;">
+            {{ num }}
+        </a>
+        {% else %}
+        <a href="?page={{ num }}{% if q %}&q={{ q|urlencode }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}"
+           style="width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-decoration:none;background:#fff;color:#1A3A9B;border:1px solid rgba(26,58,155,0.15);">
+            {{ num }}
+        </a>
+        {% endif %}
+        {% endfor %}
+
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="p-3 bg-surface border border-white/5 rounded-lg hover:bg-white/10">Siguiente</a>
+        <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}"
+           style="width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-decoration:none;border:1px solid rgba(26,58,155,0.15);background:#fff;color:#1A3A9B;">→</a>
         {% endif %}
     </div>
     {% endif %}
-</section>
+</div>
+
 {% endblock %}

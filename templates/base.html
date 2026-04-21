@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
-    <title>{% block title %}{{ settings.site_name|default:"Luxury Drive | Concesionaria Premium" }}{% endblock %}</title>
+
+    <title>{% block title %}{{ settings.site_name|default:"Anáhuac Automotriz | Mexicali" }}{% endblock %}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -20,12 +20,16 @@
             theme: {
                 extend: {
                     colors: {
-                        gold: '#C5A059',
-                        dark: '#0A0A0A',
-                        surface: '#161616',
+                        blue:       '#1A3A9B',
+                        'blue-dark':'#0E2470',
+                        'blue-light':'#2B52CC',
+                        red:        '#C8102E',
+                        'red-dark': '#9E0B24',
+                        surface:    '#EDF1FB',
                     },
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        sans:        ['Barlow', 'sans-serif'],
+                        condensed:   ['Barlow Condensed', 'sans-serif'],
                     },
                 }
             }
@@ -34,47 +38,210 @@
 
     <style>
         [x-cloak] { display: none !important; }
-        
+
+        :root {
+            --blue:        #1A3A9B;
+            --blue-dark:   #0E2470;
+            --blue-light:  #2B52CC;
+            --red:         #C8102E;
+            --red-dark:    #9E0B24;
+            --white:       #FFFFFF;
+            --off-white:   #F0F4FF;
+            --gray:        #8A9ABF;
+            --surface:     #EDF1FB;
+            --text:        #111827;
+        }
+
         body {
-            background-color: #0A0A0A;
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.03) 0%, transparent 30%),
-                radial-gradient(circle at 100% 100%, rgba(197, 160, 89, 0.03) 0%, transparent 30%);
-            color: #F5F5F5;
+            background-color: var(--off-white);
+            color: var(--text);
+            font-family: 'Barlow', sans-serif;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Animación suave de carga */
+        /* Animación de carga */
         .page-fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
+            animation: fadeIn 0.5s ease-out forwards;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* Scrollbar elegante */
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0A0A0A; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #C5A059; }
+        ::-webkit-scrollbar-track { background: var(--blue-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--red-dark); }
+
+        /* Selección de texto */
+        ::selection { background: var(--red); color: var(--white); }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            background: var(--blue);
+            padding: 5px 32px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 0.03em;
+        }
+        .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; }
+        .topbar a:hover { color: var(--white); }
+
+        /* ── LOGO ── */
+        .logo {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+            text-decoration: none;
+        }
+        .logo-top {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 28px;
+            color: var(--white);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .logo-badge {
+            background: var(--red);
+            color: var(--white);
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 2px;
+            align-self: flex-start;
+            margin-top: 3px;
+        }
+
+        /* ── NAV LINKS ── */
+        .nav-link {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--white);
+            background: rgba(255,255,255,0.1);
+        }
+        .nav-link.active { border-bottom: 2px solid var(--red); }
+
+        .nav-cta {
+            background: var(--red) !important;
+            color: var(--white) !important;
+            padding: 10px 20px !important;
+        }
+        .nav-cta:hover { background: var(--red-dark) !important; }
+
+        /* ── BOTONES GLOBALES ── */
+        .btn-primary {
+            background: var(--red);
+            color: var(--white);
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-primary:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--blue-dark);
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 12px 32px;
+            border: 2px solid var(--blue);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-secondary:hover { background: var(--blue); color: var(--white); }
+
+        /* ── SECTION TITLES ── */
+        .section-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 36px;
+            text-transform: uppercase;
+            color: var(--blue-dark);
+            letter-spacing: 0.03em;
+            margin-bottom: 4px;
+        }
+        .section-title span { color: var(--red); }
+        .section-sub {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+        .section-line {
+            width: 48px;
+            height: 4px;
+            background: var(--red);
+            border-radius: 2px;
+            margin-bottom: 32px;
+        }
+
+        /* ── FOOTER ── */
+        .footer-phone {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--white);
+        }
     </style>
 
     {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-screen flex flex-col selection:bg-gold selection:text-dark">
+<body class="min-h-screen flex flex-col">
 
-    <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-dark/80 border-b border-white/5">
+    <!-- ── HEADER ── -->
+    <header class="sticky top-0 z-50 w-full" style="background:var(--blue-dark); border-bottom: 3px solid var(--red); box-shadow: 0 4px 24px rgba(14,36,112,0.35);">
+
+        <!-- Topbar informativa -->
+        <div class="topbar">
+            <span>📞 <a href="tel:6861137393">686 113-7393</a></span>
+            <span>📞 <a href="tel:6865579004">686 557-9004</a></span>
+            <span>📍 Blvd. Lázaro Cárdenas 969, Mexicali</span>
+            <span>🕐 Lun–Sáb 9 a.m. – 7 p.m.</span>
+        </div>
+
         {% include "partials/navbar.html" %}
     </header>
 
+    <!-- ── CONTENIDO PRINCIPAL ── -->
     <main class="flex-grow page-fade-in">
         {% block content %}
         {% endblock content %}
     </main>
 
-    <footer class="bg-surface border-t border-white/5">
+    <!-- ── FOOTER ── -->
+    <footer style="background:var(--blue-dark); border-top: 3px solid var(--red);">
         {% include "partials/footer.html" %}
     </footer>
 

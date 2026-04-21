@@ -1,14 +1,221 @@
 {% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Búsqueda: "{{ query }}" | {{ settings.site_name|default:"Anáhuac Automotriz" }}{% endblock %}
 
 {% block content %}
-<section class="max-w-7xl mx-auto px-4 py-12">
-  <h1 class="text-3xl font-bold mb-6">Resultados para "{{ query }}"</h1>
-  {% for car in cars %}
-    <div class="mb-4">
-      <a href="{% url 'car_detail' car.slug %}" class="text-red-400">{{ car.title }}</a>
+
+{# ── HERO BÚSQUEDA ── #}
+<div style="background:#0E2470; border-bottom:3px solid #C8102E; padding:36px 32px;">
+    <div class="max-w-7xl mx-auto">
+
+        {# Breadcrumb #}
+        <p style="font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:12px;">
+            <a href="/" style="color:rgba(255,255,255,0.45); text-decoration:none;">Inicio</a> ›
+            <a href="/catalogo/" style="color:rgba(255,255,255,0.45); text-decoration:none;">Catálogo</a> ›
+            <span style="color:#C8102E;">Búsqueda</span>
+        </p>
+
+        <h1 style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:38px; color:#fff; text-transform:uppercase; letter-spacing:0.02em; line-height:1; margin-bottom:6px;">
+            Resultados para "<span style="color:#C8102E;">{{ query }}</span>"
+        </h1>
+        <p style="font-size:13px; color:rgba(255,255,255,0.45);">
+            Se encontraron {{ cars|length }} vehículo{{ cars|length|pluralize }}
+        </p>
+
+        {# Barra de búsqueda #}
+        <form method="GET" action="" style="margin-top:20px; display:flex; max-width:560px;">
+            <input type="text" name="q" value="{{ query }}"
+                   placeholder="Buscar marca, modelo, año..."
+                   style="flex:1; padding:12px 16px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-right:none; border-radius:4px 0 0 4px; color:#fff; font-family:'Barlow',sans-serif; font-size:14px; outline:none;">
+            <button type="submit"
+                    style="background:#C8102E; color:#fff; border:none; padding:0 20px; border-radius:0 4px 4px 0; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">
+                Buscar
+            </button>
+        </form>
     </div>
-  {% empty %}
-    <p>No se encontraron resultados.</p>
-  {% endfor %}
-</section>
+</div>
+
+{# ── LAYOUT PRINCIPAL ── #}
+<div class="max-w-7xl mx-auto px-6 py-10" style="display:grid; grid-template-columns:240px 1fr; gap:28px; align-items:start;">
+
+    {# ── SIDEBAR FILTROS ── #}
+    <aside style="display:flex; flex-direction:column; gap:16px;">
+
+        {# Precio #}
+        <form method="GET" style="background:#fff; border-radius:6px; border:1px solid rgba(26,58,155,0.08); overflow:hidden;">
+            <div style="background:#0E2470; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:12px; letter-spacing:0.18em; text-transform:uppercase; padding:10px 14px;">
+                Precio
+            </div>
+            <div style="padding:14px;">
+                <div style="display:flex; gap:8px;">
+                    <input type="number" name="precio_min" value="{{ request.GET.precio_min }}" placeholder="Min $"
+                           style="flex:1; padding:7px 10px; border:1px solid rgba(26,58,155,0.15); border-radius:4px; font-size:12px; font-family:'Barlow',sans-serif; outline:none;">
+                    <input type="number" name="precio_max" value="{{ request.GET.precio_max }}" placeholder="Max $"
+                           style="flex:1; padding:7px 10px; border:1px solid rgba(26,58,155,0.15); border-radius:4px; font-size:12px; font-family:'Barlow',sans-serif; outline:none;">
+                </div>
+                <input type="hidden" name="q" value="{{ query }}">
+                <button type="submit" style="width:100%; margin-top:12px; background:#1A3A9B; color:#fff; border:none; padding:9px; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">
+                    Aplicar
+                </button>
+            </div>
+        </form>
+
+        {# Marca #}
+        <form method="GET" style="background:#fff; border-radius:6px; border:1px solid rgba(26,58,155,0.08); overflow:hidden;">
+            <div style="background:#0E2470; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:12px; letter-spacing:0.18em; text-transform:uppercase; padding:10px 14px;">
+                Marca
+            </div>
+            <div style="padding:14px;">
+                <input type="hidden" name="q" value="{{ query }}">
+                {% for brand in filter_brands %}
+                <div style="display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid rgba(26,58,155,0.05);">
+                    <input type="checkbox" name="marca" value="{{ brand.slug }}" id="brand_{{ brand.slug }}"
+                           style="accent-color:#C8102E; width:14px; height:14px;"
+                           {% if brand.slug in selected_brands %}checked{% endif %}>
+                    <label for="brand_{{ brand.slug }}" style="font-size:13px; color:#4B5563; flex:1; cursor:pointer;">{{ brand.name }}</label>
+                    <span style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; background:#EDF1FB; color:#8A9ABF; padding:1px 6px; border-radius:10px;">
+                        {{ brand.car_count }}
+                    </span>
+                </div>
+                {% endfor %}
+                <button type="submit" style="width:100%; margin-top:12px; background:#1A3A9B; color:#fff; border:none; padding:9px; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">
+                    Filtrar
+                </button>
+            </div>
+        </form>
+
+        {# Año #}
+        <form method="GET" style="background:#fff; border-radius:6px; border:1px solid rgba(26,58,155,0.08); overflow:hidden;">
+            <div style="background:#0E2470; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:12px; letter-spacing:0.18em; text-transform:uppercase; padding:10px 14px;">
+                Año
+            </div>
+            <div style="padding:14px;">
+                <div style="display:flex; gap:8px;">
+                    <input type="number" name="anio_min" value="{{ request.GET.anio_min }}" placeholder="Desde"
+                           style="flex:1; padding:7px 10px; border:1px solid rgba(26,58,155,0.15); border-radius:4px; font-size:12px; font-family:'Barlow',sans-serif; outline:none;">
+                    <input type="number" name="anio_max" value="{{ request.GET.anio_max }}" placeholder="Hasta"
+                           style="flex:1; padding:7px 10px; border:1px solid rgba(26,58,155,0.15); border-radius:4px; font-size:12px; font-family:'Barlow',sans-serif; outline:none;">
+                </div>
+                <input type="hidden" name="q" value="{{ query }}">
+                <button type="submit" style="width:100%; margin-top:12px; background:#1A3A9B; color:#fff; border:none; padding:9px; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">
+                    Aplicar
+                </button>
+            </div>
+        </form>
+
+    </aside>
+
+    {# ── RESULTADOS ── #}
+    <div>
+        {# Header resultados #}
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+            <p style="font-size:13px; color:#8A9ABF;">
+                <strong style="color:#111827;">{{ cars|length }} vehículo{{ cars|length|pluralize }}</strong> encontrado{{ cars|length|pluralize }} para "{{ query }}"
+            </p>
+            <form method="GET">
+                <input type="hidden" name="q" value="{{ query }}">
+                <select name="orden" onchange="this.form.submit()"
+                        style="padding:8px 12px; border:1px solid rgba(26,58,155,0.15); border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:13px; letter-spacing:0.05em; color:#0E2470; background:#fff; cursor:pointer; outline:none;">
+                    <option value="reciente" {% if request.GET.orden == 'reciente' %}selected{% endif %}>Más recientes</option>
+                    <option value="precio_asc" {% if request.GET.orden == 'precio_asc' %}selected{% endif %}>Precio: menor a mayor</option>
+                    <option value="precio_desc" {% if request.GET.orden == 'precio_desc' %}selected{% endif %}>Precio: mayor a menor</option>
+                    <option value="anio_desc" {% if request.GET.orden == 'anio_desc' %}selected{% endif %}>Año: más nuevo</option>
+                </select>
+            </form>
+        </div>
+
+        {# Grid de resultados #}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {% for car in cars %}
+            <a href="{% url 'car_detail' car.slug %}"
+               style="background:#fff; border-radius:6px; overflow:hidden; border:1px solid rgba(26,58,155,0.08); box-shadow:0 2px 10px rgba(14,36,112,0.06); text-decoration:none; color:inherit; display:block; transition:all .22s;"
+               onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 28px rgba(14,36,112,0.13)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 10px rgba(14,36,112,0.06)'">
+
+                {# Imagen #}
+                <div style="height:155px; background:#EDF1FB; border-bottom:3px solid #1A3A9B; position:relative; overflow:hidden;">
+                    {% if car.main_image %}
+                        <img src="{{ car.main_image.url }}" alt="{{ car.title }}" style="width:100%; height:100%; object-fit:cover;">
+                    {% else %}
+                        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                            <span style="color:#8A9ABF; font-size:12px; font-style:italic;">Sin imagen</span>
+                        </div>
+                    {% endif %}
+                    <span style="position:absolute; top:8px; left:8px; background:rgba(14,36,112,0.82); color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:3px 8px; border-radius:2px;">
+                        {{ car.year }}
+                    </span>
+                    {% if car.is_featured %}
+                    <span style="position:absolute; top:8px; right:8px; background:#C8102E; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:2px 7px; border-radius:2px;">
+                        Destac.
+                    </span>
+                    {% endif %}
+                </div>
+
+                {# Info #}
+                <div style="padding:14px;">
+                    <div style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:18px; text-transform:uppercase; color:#111827; letter-spacing:0.02em; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        {{ car.title }}
+                    </div>
+                    {% if car.transmission or car.engine %}
+                    <div style="font-size:12px; color:#8A9ABF; margin-bottom:10px;">
+                        {{ car.body_type }} · {{ car.transmission }} · {{ car.engine }}
+                    </div>
+                    {% endif %}
+                    <div style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:21px; color:#C8102E; margin-bottom:12px;">
+                        {% if car.price > 0 %}
+                            ${{ car.price|intcomma }} <span style="font-family:'Barlow',sans-serif; font-weight:500; font-size:12px; color:#8A9ABF;">MXN</span>
+                        {% else %}
+                            <span style="font-size:13px; color:#8A9ABF; font-family:'Barlow Condensed',sans-serif; letter-spacing:0.1em;">CONSULTE</span>
+                        {% endif %}
+                    </div>
+                    <div style="width:100%; background:#1A3A9B; color:#fff; padding:9px; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; text-align:center;">
+                        Ver detalles
+                    </div>
+                </div>
+            </a>
+
+            {% empty %}
+            {# Empty state #}
+            <div style="grid-column:1/-1; text-align:center; padding:64px 32px; background:#fff; border-radius:6px; border:1px solid rgba(26,58,155,0.08);">
+                <div style="font-size:48px; margin-bottom:16px; opacity:.35;">🔍</div>
+                <h3 style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:24px; text-transform:uppercase; color:#0E2470; margin-bottom:8px;">
+                    Sin resultados
+                </h3>
+                <p style="font-size:14px; color:#8A9ABF; margin-bottom:20px;">
+                    No encontramos vehículos para "{{ query }}". Intenta con otro término o explora el catálogo completo.
+                </p>
+                <a href="/catalogo/" style="display:inline-block; background:#C8102E; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; padding:10px 24px; border-radius:4px; text-decoration:none;">
+                    Ver catálogo completo
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {# Paginación #}
+        {% if cars.has_other_pages %}
+        <div style="display:flex; justify-content:center; gap:6px; margin-top:32px;">
+            {% if cars.has_previous %}
+            <a href="?q={{ query }}&page={{ cars.previous_page_number }}"
+               style="width:36px; height:36px; border-radius:4px; background:#fff; color:#1A3A9B; border:1px solid rgba(26,58,155,0.15); display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:700; text-decoration:none;">←</a>
+            {% endif %}
+
+            {% for num in cars.paginator.page_range %}
+            <a href="?q={{ query }}&page={{ num }}"
+               style="width:36px; height:36px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; text-decoration:none;
+               {% if cars.number == num %}background:#C8102E; color:#fff; border:1px solid #C8102E;{% else %}background:#fff; color:#1A3A9B; border:1px solid rgba(26,58,155,0.15);{% endif %}">
+                {{ num }}
+            </a>
+            {% endfor %}
+
+            {% if cars.has_next %}
+            <a href="?q={{ query }}&page={{ cars.next_page_number }}"
+               style="width:36px; height:36px; border-radius:4px; background:#fff; color:#1A3A9B; border:1px solid rgba(26,58,155,0.15); display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:700; text-decoration:none;">→</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
 {% endblock %}

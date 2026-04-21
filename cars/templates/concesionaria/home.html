@@ -1,122 +1,172 @@
 {% extends "base.html" %}
 {% load humanize %}
 
-{% block title %}Inicio | {{ settings.site_name|default:"Luxury Drive Mexicali" }}{% endblock %}
+{% block title %}Inicio | {{ settings.site_name|default:"Anáhuac Automotriz | Mexicali" }}{% endblock %}
 
 {% block content %}
-<section class="max-w-7xl mx-auto px-6 py-10">
-    <div x-data="{ activeSlide: 0, slides: {{ carousel_slides.count }} }" class="relative overflow-hidden rounded-3xl h-[400px] md:h-[600px] bg-surface">
-        
+
+{# ── CAROUSEL ── #}
+<section style="background:#0E2470; padding:32px 32px 0;">
+    <div x-data="{ activeSlide: 0, slides: {{ carousel_slides.count }} }"
+         class="relative overflow-hidden max-w-7xl mx-auto"
+         style="border-radius:8px; height:420px; background:#1A3A9B;">
+
         {% for slide in carousel_slides %}
-        <div x-show="activeSlide === {{ forloop.counter0 }}" 
-             x-transition:enter="transition opacity duration-1000" 
-             x-transition:enter-start="opacity-0" 
+        <div x-show="activeSlide === {{ forloop.counter0 }}"
+             x-transition:enter="transition opacity duration-700"
+             x-transition:enter-start="opacity-0"
              x-transition:enter-end="opacity-100"
              class="absolute inset-0"
-             style="display: none;">
+             style="display:none;">
             <img src="{{ slide.image.url }}" class="w-full h-full object-cover" alt="{{ slide.title }}">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-10">
-                <h2 class="text-3xl font-bold text-white">{{ slide.title }}</h2>
-                <p class="text-gold mt-2 font-semibold">{{ slide.subtitle }}</p>
+            <div class="absolute inset-0 flex flex-col justify-end p-10"
+                 style="background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 100%);">
+                <h2 style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:42px; color:#fff; text-transform:uppercase; letter-spacing:0.02em; line-height:1;">
+                    {{ slide.title }}
+                </h2>
+                <p style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:18px; color:#ff8096; margin-top:6px; letter-spacing:0.05em; text-transform:uppercase;">
+                    {{ slide.subtitle }}
+                </p>
                 <div class="mt-4">
-                    <a href="/catalogo/" class="inline-block px-6 py-2 bg-gold text-dark font-bold rounded-lg hover:bg-yellow-500 transition-all">
-                        Ver Inventario
-                    </a>
+                    <a href="/catalogo/" class="btn-primary inline-block">Ver Inventario →</a>
                 </div>
             </div>
         </div>
         {% endfor %}
 
-        <button @click="activeSlide = activeSlide === 0 ? slides - 1 : activeSlide - 1" class="absolute left-5 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-gold p-3 rounded-full backdrop-blur-md z-20 transition-all">
-            <span class="text-white">←</span>
-        </button>
-        <button @click="activeSlide = activeSlide === slides - 1 ? 0 : activeSlide + 1" class="absolute right-5 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-gold p-3 rounded-full backdrop-blur-md z-20 transition-all">
-            <span class="text-white">→</span>
-        </button>
+        {# Arrows #}
+        <button @click="activeSlide = activeSlide === 0 ? slides - 1 : activeSlide - 1"
+                class="absolute left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center transition-all"
+                style="background:rgba(255,255,255,0.12); border:none; color:#fff; width:40px; height:40px; border-radius:50%; font-size:18px; cursor:pointer;"
+                onmouseover="this.style.background='#C8102E'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">←</button>
+        <button @click="activeSlide = activeSlide === slides - 1 ? 0 : activeSlide + 1"
+                class="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center transition-all"
+                style="background:rgba(255,255,255,0.12); border:none; color:#fff; width:40px; height:40px; border-radius:50%; font-size:18px; cursor:pointer;"
+                onmouseover="this.style.background='#C8102E'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">→</button>
 
-        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        {# Dots #}
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
             {% for i in carousel_slides %}
-            <div @click="activeSlide = {{ forloop.counter0 }}" 
-                 :class="activeSlide === {{ forloop.counter0 }} ? 'bg-gold w-8' : 'bg-white/30 w-2'" 
-                 class="h-2 rounded-full cursor-pointer transition-all duration-300"></div>
+            <div @click="activeSlide = {{ forloop.counter0 }}"
+                 :class="activeSlide === {{ forloop.counter0 }} ? 'w-7' : 'w-2'"
+                 class="h-2 rounded-full cursor-pointer transition-all duration-300"
+                 :style="activeSlide === {{ forloop.counter0 }} ? 'background:#C8102E' : 'background:rgba(255,255,255,0.3)'"></div>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<section id="marcas" class="py-16 bg-white/[0.02]">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-end justify-between mb-10">
-            <div>
-                <h2 class="text-3xl font-bold italic tracking-tight text-white">Nuestras Marcas</h2>
-                <div class="h-1 w-12 bg-gold mt-2"></div>
-            </div>
+{# ── STATS BAR ── #}
+<div style="background:#C8102E; padding:16px 32px; display:flex; justify-content:center; gap:48px; flex-wrap:wrap;">
+    <div class="text-center text-white">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:26px; line-height:1;">+200</div>
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; opacity:.85;">Vehículos disponibles</div>
+    </div>
+    <div class="text-center text-white">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:26px; line-height:1;">20+</div>
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; opacity:.85;">Años de experiencia</div>
+    </div>
+    <div class="text-center text-white">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:26px; line-height:1;">4.6★</div>
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; opacity:.85;">Calificación Google</div>
+    </div>
+    <div class="text-center text-white">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:26px; line-height:1;">100%</div>
+        <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; opacity:.85;">Clientes satisfechos</div>
+    </div>
+</div>
+
+{# ── MARCAS ── #}
+<section id="marcas" style="background:#fff; border-top:1px solid rgba(26,58,155,0.08); border-bottom:1px solid rgba(26,58,155,0.08);">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        <div class="mb-8">
+            <h2 class="section-title">Nuestras <span>Marcas</span></h2>
+            <div class="section-line"></div>
         </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {% for brand in brands %}
-            <a href="{% url 'brand_catalog' brand.slug %}" 
-               class="group flex flex-col items-center justify-center p-6 bg-surface border border-white/5 rounded-2xl hover:border-gold/50 transition-all duration-300">
+            <a href="{% url 'brand_catalog' brand.slug %}"
+               class="group flex flex-col items-center justify-center p-5 transition-all duration-200"
+               style="background:#EDF1FB; border:1px solid rgba(26,58,155,0.08); border-radius:6px;"
+               onmouseover="this.style.borderColor='#1A3A9B'; this.style.background='#fff'; this.style.transform='translateY(-2px)'"
+               onmouseout="this.style.borderColor='rgba(26,58,155,0.08)'; this.style.background='#EDF1FB'; this.style.transform='translateY(0)'">
                 {% if brand.logo %}
-                    <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" 
-                         class="h-12 w-auto object-contain mb-3 grayscale group-hover:grayscale-0 transition-all duration-500">
+                    <img src="{{ brand.logo.url }}" alt="{{ brand.name }}"
+                         class="h-10 w-auto object-contain mb-3 grayscale group-hover:grayscale-0 transition-all duration-500">
                 {% endif %}
-                <span class="text-sm font-semibold text-zinc-400 group-hover:text-gold transition-colors italic">
+                <span style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:#8A9ABF;"
+                      class="group-hover:text-blue-dark transition-colors">
                     {{ brand.name }}
                 </span>
             </a>
             {% empty %}
-                <p class="text-zinc-500 col-span-full text-center">No hay marcas activas actualmente.</p>
+                <p class="col-span-full text-center" style="color:#8A9ABF; font-size:14px;">No hay marcas activas actualmente.</p>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<section class="py-20">
+{# ── VEHÍCULOS DESTACADOS ── #}
+<section class="py-14">
     <div class="max-w-7xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
             <div>
-                <h2 class="text-3xl font-bold text-white">Recomendaciones del Día</h2>
-                <p class="text-zinc-500 text-sm mt-1">Seleccionados de nuestro inventario exclusivo.</p>
+                <h2 class="section-title">Vehículos <span>Destacados</span></h2>
+                <p class="section-sub">Seleccionados de nuestro inventario en Mexicali.</p>
+                <div class="section-line"></div>
             </div>
-            <a href="/catalogo/" class="text-gold font-semibold flex items-center gap-2 hover:underline">
-                Ver catálogo completo <span>→</span>
+            <a href="/catalogo/"
+               style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; letter-spacing:0.08em; text-transform:uppercase; color:#1A3A9B; text-decoration:none; display:flex; align-items:center; gap:6px;"
+               onmouseover="this.style.color='#C8102E'" onmouseout="this.style.color='#1A3A9B'">
+                Ver catálogo completo →
             </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
             {% for car in featured_cars %}
-            <div class="group bg-surface rounded-2xl overflow-hidden border border-white/5 hover:border-gold/30 transition-all duration-500 shadow-lg">
-                <div class="relative h-48 overflow-hidden bg-zinc-800">
+            <div class="group transition-all duration-300"
+                 style="background:#fff; border-radius:6px; overflow:hidden; border:1px solid rgba(26,58,155,0.08); box-shadow:0 2px 12px rgba(14,36,112,0.06);"
+                 onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 28px rgba(14,36,112,0.13)'"
+                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 12px rgba(14,36,112,0.06)'">
+
+                {# Imagen #}
+                <div class="relative overflow-hidden" style="height:160px; background:#EDF1FB; border-bottom:3px solid #1A3A9B;">
                     {% if car.main_image %}
-                        <img src="{{ car.main_image.url }}" alt="{{ car.title }}" 
+                        <img src="{{ car.main_image.url }}" alt="{{ car.title }}"
                              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                     {% else %}
                         <div class="w-full h-full flex items-center justify-center">
-                            <span class="text-zinc-700 text-xs italic">Sin imagen</span>
+                            <span style="color:#8A9ABF; font-size:12px; font-style:italic;">Sin imagen</span>
                         </div>
                     {% endif %}
-                    <div class="absolute top-3 left-3">
-                        <span class="px-2 py-1 bg-dark/70 backdrop-blur-md text-[10px] font-bold rounded border border-white/10 text-white uppercase">
+                    <div class="absolute top-2 left-2">
+                        <span style="background:rgba(14,36,112,0.8); color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:3px 8px; border-radius:2px;">
                             {{ car.year }}
                         </span>
                     </div>
                 </div>
 
-                <div class="p-5">
-                    <h3 class="text-sm font-bold truncate text-white group-hover:text-gold transition-colors mb-3">
+                {# Info #}
+                <div class="p-4">
+                    <h3 style="font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:17px; text-transform:uppercase; color:#111827; letter-spacing:0.02em; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+                        class="group-hover:text-blue transition-colors">
                         {{ car.title }}
                     </h3>
-                    <p class="text-xl font-light text-white mb-5">
+
+                    <p style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; color:#C8102E; margin-bottom:12px;">
                         {% if car.price > 0 %}
-                            <span class="text-gold font-bold text-base">$</span>{{ car.price|intcomma }}
+                            ${{ car.price|intcomma }} <span style="font-family:'Barlow',sans-serif; font-weight:500; font-size:12px; color:#8A9ABF;">MXN</span>
                         {% else %}
-                            <span class="text-zinc-500 text-sm italic uppercase font-bold tracking-widest">Consulte</span>
+                            <span style="font-size:13px; color:#8A9ABF; font-family:'Barlow Condensed',sans-serif; letter-spacing:0.1em;">CONSULTE</span>
                         {% endif %}
                     </p>
-                    <a href="{% url 'car_detail' car.slug %}" 
-                       class="block w-full py-2 text-center text-xs border border-white/10 rounded-lg font-semibold text-white hover:bg-white hover:text-dark transition-all">
-                        Detalles
+
+                    <a href="{% url 'car_detail' car.slug %}"
+                       class="block w-full py-2 text-center transition-all"
+                       style="background:#1A3A9B; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; border-radius:4px; text-decoration:none;"
+                       onmouseover="this.style.background='#0E2470'" onmouseout="this.style.background='#1A3A9B'">
+                        Ver detalles
                     </a>
                 </div>
             </div>
@@ -124,12 +174,16 @@
         </div>
     </div>
 </section>
-<a href="https://wa.me/526861835967" 
-   target="_blank" 
-   class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-[#25D366] rounded-full shadow-2xl hover:scale-110 transition-transform duration-300"
+
+{# ── WHATSAPP FLOTANTE ── #}
+<a href="https://wa.me/52{{ settings.whatsapp|default:'6861835967' }}"
+   target="_blank"
+   class="fixed bottom-6 right-6 z-50 flex items-center justify-center transition-transform duration-300 hover:scale-110"
+   style="width:60px; height:60px; background:#25D366; border-radius:50%; box-shadow:0 4px 20px rgba(37,211,102,0.4); text-decoration:none;"
    title="Contactar por WhatsApp">
-    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 16 16">
         <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
     </svg>
 </a>
+
 {% endblock %}

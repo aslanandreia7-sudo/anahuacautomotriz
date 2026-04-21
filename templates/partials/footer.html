@@ -1,6 +1,46 @@
-<footer class="border-t border-zinc-800 mt-16">
-  <div class="max-w-7xl mx-auto px-4 py-10 text-sm text-zinc-400">
-    <p>{{ settings.site_name|default:"Concesionaria Premium" }}</p>
-    <p>{{ settings.address|default:"Mexicali, B.C., México" }}</p>
+<div class="max-w-7xl mx-auto px-6" style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:48px; padding-top:48px; padding-bottom:28px;">
+
+  <!-- Marca -->
+  <div>
+    <a href="/" class="logo" style="display:flex; flex-direction:column; line-height:1; text-decoration:none; margin-bottom:14px;">
+      <span style="font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:26px; color:#fff; letter-spacing:0.06em; text-transform:uppercase;">Anáhuac</span>
+      <span style="background:#C8102E; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; padding:2px 7px; border-radius:2px; align-self:flex-start; margin-top:3px;">Automotriz</span>
+    </a>
+    <p style="font-size:13px; color:#fff; line-height:1.65; opacity:0.7;">
+      {{ settings.description|default:"Concesionaria de confianza en Mexicali. Atención personalizada y los mejores precios de Baja California." }}
+    </p>
+    <div style="display:flex; gap:10px; margin-top:18px;">
+      {% if settings.facebook_url %}<a href="{{ settings.facebook_url }}" class="social-btn">Facebook</a>{% endif %}
+      {% if settings.whatsapp_url %}<a href="{{ settings.whatsapp_url }}" class="social-btn">WhatsApp</a>{% endif %}
+      {% if settings.instagram_url %}<a href="{{ settings.instagram_url }}" class="social-btn">Instagram</a>{% endif %}
+    </div>
   </div>
-</footer>
+
+  <!-- Navegación -->
+  <div>
+    <p class="col-title" style="font-size:14px; color:#fff; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.1em;">Navegación</p>
+    <ul class="footer-links" style="list-style:none; padding:0; margin:0;">
+      <li><a href="/" style="color:#fff; text-decoration:none; display:block; padding:4px 0; font-size:14px;">Inicio</a></li>
+      <li><a href="/catalogo/" style="color:#fff; text-decoration:none; display:block; padding:4px 0; font-size:14px;">Catálogo</a></li>
+      <li><a href="/nosotros/" style="color:#fff; text-decoration:none; display:block; padding:4px 0; font-size:14px;">Nosotros</a></li>
+      <li><a href="/contacto/" style="color:#fff; text-decoration:none; display:block; padding:4px 0; font-size:14px;">Contacto</a></li>
+    </ul>
+  </div>
+
+  <!-- Contacto -->
+  <div>
+    <p class="col-title" style="font-size:14px; color:#fff; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.1em;">Contacto</p>
+    <a href="tel:{{ settings.phone_1|default:'6861137393' }}" class="phone" style="color:#fff; text-decoration:none; display:block; font-size:14px; margin-bottom:4px;">{{ settings.phone_1|default:"686 113-7393" }}</a>
+    <a href="tel:{{ settings.phone_2|default:'6865579004' }}" class="phone" style="color:#fff; text-decoration:none; display:block; font-size:14px; margin-bottom:8px;">{{ settings.phone_2|default:"686 557-9004" }}</a>
+    <p class="addr" style="color:#fff; font-size:13px; margin-bottom:4px; opacity:0.8;">{{ settings.address|default:"Blvd. Lázaro Cárdenas 969, Jardines del Lago, Mexicali, B.C. 21330" }}</p>
+    <p class="hours" style="color:#fff; font-size:13px; margin:0; opacity:0.7;"><span>{{ settings.hours|default:"Lun – Sáb · 9 a.m. – 7 p.m." }}</span></p>
+  </div>
+
+</div>
+
+
+<!-- Bottom bar -->
+<div class="max-w-7xl mx-auto px-6" style="border-top:1px solid rgba(255,255,255,0.07); padding:16px 24px; display:flex; justify-content:space-between; font-size:12px; color:#fff; flex-wrap:wrap; gap:8px; opacity:0.4;">
+  <span>© {% now "Y" %} {{ settings.site_name|default:"Anáhuac Automotriz" }} · Todos los derechos reservados</span>
+  <span>Mexicali, Baja California · México</span>
+</div>
